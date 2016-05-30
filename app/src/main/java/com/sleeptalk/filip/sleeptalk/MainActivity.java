@@ -51,9 +51,14 @@ public class MainActivity extends AppCompatActivity {
         int sampleRate = signalParams.second;
         Mfcc mfcc = new Mfcc(stdSignal, sampleRate);
         List<List<Double>> mfccCoefs = mfcc.compute();
-        WavRecord wv = new WavRecord();
-        wv.startRecording();
-        wv.stopRecording();
+//        WavRecord wv = new WavRecord();
+//        wv.startRecording();
+//        wv.stopRecording();
+        try {
+            datafile.saveToJSON(mfccCoefs, "Tak", "bb.json");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         /// FFT Tet
 //        List<Double> nlist = new ArrayList<>();
 //        for(int i = 0 ; i < 128; i++){
@@ -76,11 +81,11 @@ public class MainActivity extends AppCompatActivity {
 //        double bb = (1.0/newSig.size())*Statistics.sum(newSig);
 //        newSig.size();
 ////
-        try {
-            datafile.save3D(mfccCoefs);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+//        try {
+//            datafile.save3D(mfccCoefs);
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
 
         // OnClick listeners
         recButton.setOnClickListener(new View.OnClickListener() {
