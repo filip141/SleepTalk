@@ -51,9 +51,9 @@ public class MainActivity extends AppCompatActivity {
         int sampleRate = signalParams.second;
         Mfcc mfcc = new Mfcc(stdSignal, sampleRate);
         List<List<Double>> mfccCoefs = mfcc.compute();
-
         WavRecord wv = new WavRecord();
         wv.startRecording();
+        wv.stopRecording();
         /// FFT Tet
 //        List<Double> nlist = new ArrayList<>();
 //        for(int i = 0 ; i < 128; i++){
