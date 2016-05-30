@@ -121,7 +121,8 @@ public class WavRecord {
     }
 
     // Stop recording
-    public void stopRecording(){
+    public String stopRecording(){
+        String fileToSave = getFilename();
         if(null != recorder){
             isRecording = false;
 
@@ -134,8 +135,9 @@ public class WavRecord {
             recordingThread = null;
         }
 
-        copyWaveFile(getTempFilename(),getFilename());
+        copyWaveFile(getTempFilename(), fileToSave);
         deleteTempFile();
+        return fileToSave;
     }
 
     // Delete temporary file
