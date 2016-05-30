@@ -29,7 +29,7 @@ public class WavRecord {
     private boolean isRecording = false;
 
     public WavRecord(){
-        bufferSize = AudioRecord.getMinBufferSize(RECORDER_SAMPLERATE,
+        bufferSize = AudioRecord.getMinBufferSize(8000,
                 AudioFormat.CHANNEL_CONFIGURATION_MONO,
                 AudioFormat.ENCODING_PCM_16BIT);
     }
@@ -97,7 +97,7 @@ public class WavRecord {
             e.printStackTrace();
         }
 
-        int read;
+        int read = 0;
 
         if(null != os){
             while(isRecording){
@@ -127,7 +127,7 @@ public class WavRecord {
             isRecording = false;
 
             int i = recorder.getState();
-            if(i==1)
+            if(i == 1)
                 recorder.stop();
             recorder.release();
 

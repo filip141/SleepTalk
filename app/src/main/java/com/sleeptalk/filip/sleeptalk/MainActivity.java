@@ -54,22 +54,26 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 recButton.setEnabled(false);
                 m.start();
-                wv.startRecording();
+                Handler handlerStart = new Handler();
+                handlerStart.postDelayed(new Runnable() {
+                    public void run() {
+                        wv.startRecording();
+                    }
+                }, 1100);
                 Handler handler = new Handler();
                 handler.postDelayed(new Runnable() {
                     public void run() {
                         fileName = wv.stopRecording();
-                        Log.i("sadad","po starcie");
                         WavFile file = new WavFile(fileName);
                         List<List<Double>> mfccCoefs = mfccComputing(file);
                         try {
-                            datafile.saveToJSON(mfccCoefs,"Jakie słowo","nazwa jsona");
+                            datafile.saveToJSON(mfccCoefs,"Jeden","jeden.json");
                         } catch (Exception e) {
                             e.printStackTrace();
                          }
                         recButton.setEnabled(true);
                     }
-                }, 1500);
+                }, 2800);
 
             }
         });
