@@ -1,4 +1,4 @@
-package com.example.mateusz.sleeptalk;
+package com.sleeptalk.filip.sleeptalk;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -32,8 +32,7 @@ public class DTW {
             int up = (int) Math.min(Nw,Math.ceil(tg*i+Q));
             upLimit.add(up);
             downLimit.add(down);
-            for(int j=0;j<Ns;j++)
-            //for(int j=down;j<up;j++)
+            for(int j=down;j<up;j++)
             {
                 double dist_eukl=0;
                 for(int k =0;k<coeffs;k++)
