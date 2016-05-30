@@ -42,10 +42,10 @@ public class WavRecord {
         if(!file.exists()){
             file.mkdirs();
         }
-
         return (file.getAbsolutePath() + "/" + System.currentTimeMillis() + AUDIO_RECORDER_FILE_EXT_WAV);
     }
 
+    // Return temp file patch
     private String getTempFilename(){
         String filepath = Environment.getExternalStorageDirectory().getPath();
         File file = new File(filepath,AUDIO_RECORDER_FOLDER);
@@ -62,14 +62,14 @@ public class WavRecord {
         return (file.getAbsolutePath() + "/" + AUDIO_RECORDER_TEMP_FILE);
     }
 
-
     // Start Recording
     public void startRecording(){
         recorder = new AudioRecord(MediaRecorder.AudioSource.MIC,
                 RECORDER_SAMPLERATE, RECORDER_CHANNELS,RECORDER_AUDIO_ENCODING, bufferSize);
 
+        // Check recording state
         int i = recorder.getState();
-        if(i==1)
+        if(i == 1)
             recorder.startRecording();
 
         isRecording = true;
@@ -84,6 +84,8 @@ public class WavRecord {
 
         recordingThread.start();
     }
+
+    // Write data to temp file
     private void writeAudioDataToFile(){
         byte data[] = new byte[bufferSize];
         String filename = getTempFilename();
@@ -92,11 +94,10 @@ public class WavRecord {
         try {
             os = new FileOutputStream(filename);
         } catch (FileNotFoundException e) {
-// TODO Auto-generated catch block
             e.printStackTrace();
         }
 
-        int read = 0;
+        int read;
 
         if(null != os){
             while(isRecording){
@@ -119,7 +120,8 @@ public class WavRecord {
         }
     }
 
-    private void stopRecording(){
+    // Stop recording
+    public void stopRecording(){
         if(null != recorder){
             isRecording = false;
 
@@ -136,6 +138,7 @@ public class WavRecord {
         deleteTempFile();
     }
 
+    // Delete temporary file
     private void deleteTempFile() {
         File file = new File(getTempFilename());
 
@@ -175,6 +178,7 @@ public class WavRecord {
         }
     }
 
+    // Build Header
     private void WriteWaveFileHeader(
             FileOutputStream out, long totalAudioLen,
             long totalDataLen, long longSampleRate, int channels,
