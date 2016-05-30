@@ -31,7 +31,7 @@ public class Standarizer {
         List<Double> decimatedArray = new ArrayList<>();
 
         // New frequency should be lower then Signal Sample Rate
-        if(newFreq < sampleRate){
+        if(newFreq <= sampleRate){
             // New frequency and old sample rate should be divisible
             if(sampleRate % newFreq == 0){
                 step = sampleRate / newFreq;
