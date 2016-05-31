@@ -23,6 +23,7 @@ public class WavRecord {
     private static final int RECORDER_CHANNELS = AudioFormat.CHANNEL_IN_STEREO;
     private static final int RECORDER_AUDIO_ENCODING = AudioFormat.ENCODING_PCM_16BIT;
 
+    private String fileToSave;
     private AudioRecord recorder = null;
     private int bufferSize = 0;
     private Thread recordingThread = null;
@@ -122,7 +123,7 @@ public class WavRecord {
 
     // Stop recording
     public String stopRecording(){
-        String fileToSave = getFilename();
+        fileToSave = getFilename();
         if(null != recorder){
             isRecording = false;
 
@@ -143,6 +144,13 @@ public class WavRecord {
     // Delete temporary file
     private void deleteTempFile() {
         File file = new File(getTempFilename());
+
+        file.delete();
+    }
+
+    // Delete temporary file
+    public void deleteFile() {
+        File file = new File(fileToSave);
 
         file.delete();
     }

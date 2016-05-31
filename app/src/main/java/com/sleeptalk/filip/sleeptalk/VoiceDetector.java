@@ -16,7 +16,9 @@ public class VoiceDetector {
     private List<Double> signal;
     private static double FrameTime = 0.025;
     private static double FrameOverlap = 0.015;
-    private static double distanceFromMax = 0.33;
+    private static double distanceFromMax = 0.8;
+    private static double powerCoeff = -0.93;
+    private static double linearCoeff = 0.1;
 
     // Public
     public Hamming window;
@@ -148,7 +150,6 @@ public class VoiceDetector {
         //Primitive types
         double alpha;
         double scale;
-        double sampMeas;
         double framePower;
         double frameZCR;
         int firstIndex;
@@ -158,6 +159,7 @@ public class VoiceDetector {
 
         List<Double> frame;
         List<ComplexNumber> framePSD;
+        List<Double> measList = new ArrayList<>();
         List<Double> weight = new ArrayList<>();
         List<Integer> signalBinary = new ArrayList<>();
         Hamming window = new Hamming();
@@ -180,25 +182,26 @@ public class VoiceDetector {
             // Find frame features
             framePower = (1.0 / frameLength)*framePower;
             frameZCR = (1.0 / frameLength)*findZeroCrossingRate(frame);
-
+            measList.add(framePower * (1 - frameZCR));
+        }
+        for(Double sample: measList){
+            sample = sample / Statistics.max(measList);
             // Collect 10 frames
             if(counter < 10){
-                weight.add(framePower*( 1 - frameZCR) * 1000);
+                weight.add(sample);
             }
             else if(counter == 10){
-                alpha = Math.pow(0.01 * Statistics.var(weight), (-0.92));
+                alpha = linearCoeff * Math.pow( Statistics.var(weight), powerCoeff);
                 trigger = Statistics.mean(weight) + alpha*Statistics.var(weight);
             }
             else{
-                sampMeas = framePower * (1 - frameZCR) * 1000;
-                if(sampMeas >= trigger){
+                if(sample >= trigger){
                     signalBinary.add(1);
                 }
                 else{
                     signalBinary.add(0);
                 }
             }
-
             counter++;
         }
         signalBinary = humanInner(signalBinary);

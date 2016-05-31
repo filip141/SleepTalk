@@ -1,7 +1,9 @@
 package com.sleeptalk.filip.sleeptalk;
 import android.content.Context;
 import android.os.Environment;
+import android.util.Log;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
@@ -12,6 +14,9 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -21,8 +26,9 @@ import java.util.List;
  */
 public class FileSaver{
 
-    String datafile = "//sdcard//data_file.txt";
-    BufferedWriter fileWriter;
+    private static final String datafile = "//sdcard//data_file.txt";
+    private static final String JSON_NAME = "final.json";
+    private BufferedWriter fileWriter;
 
     public FileSaver(Context activity) {
         try {
@@ -105,5 +111,86 @@ public class FileSaver{
         }
     }
 
+    // Get Java ArrayList from JSON object
+    public WordLibrary getListFromJSON() throws Exception {
+        List<String> mfccCoeffs;
+        int coeffsNumber = 39;
+        JSONArray jsonList;
+        String[] mfcc;
+        String jsonKey;
+        List<Double> coeffs;
+        List<List<Double>> mellVectors;
+        JSONObject obj = readFromJSON(JSON_NAME);
+        Iterator<String> iter = obj.keys();
+        List<String> wordKeys = new ArrayList<>();
+        List<List<List<Double>>> wordRel = new ArrayList<>();
+        while(iter.hasNext()){
+            jsonKey = iter.next();
+            jsonList = (JSONArray) obj.get(jsonKey);
+            for(int i = 0; i < jsonList.length(); i++){
+                mellVectors = new ArrayList<>();
+                coeffs = new ArrayList<>();
+                mfcc = ((String) jsonList.get(i)).replace("[", "").replace("]", "").split(",");
+                for(int j = 1; j < mfcc.length + 1; j++){
+                    coeffs.add(Double.parseDouble(mfcc[j - 1]));
+                    if(j % coeffsNumber == 0){
+                        mellVectors.add(coeffs);
+                        coeffs = new ArrayList<>();
+                    }
+                }
+                wordRel.add(mellVectors);
+                wordKeys.add(jsonKey);
+            }
+        }
+        return new WordLibrary(wordRel, wordKeys);
+    }
 
+
+}
+
+final class WordLibrary {
+    private final List<List<List<Double>>> wordRel;
+    private final List<String> wordKeys;
+
+    public WordLibrary(List<List<List<Double>>> wordRel, List<String> wordKeys) {
+        this.wordRel = wordRel;
+        this.wordKeys = wordKeys;
+    }
+
+    // Get element index
+    public List<Integer> getIndex(String key){
+        List<Integer> indexes = new ArrayList<>();
+        for(int i = 0; i < wordKeys.size(); i++){
+            if(wordKeys.get(i).equals(key)){
+                indexes.add(i);
+            }
+        }
+        return indexes;
+    }
+
+    // Get found elements
+    public List<List<List<Double>>> get(String key) {
+        List<List<List<Double>>> found = new ArrayList<>();
+        List<Integer> wordIdx = getIndex(key);
+        if(wordIdx.size() == 0){
+            return null;
+        }
+        else{
+            for(int i = 0; i < wordIdx.size(); i++){
+                found.add(wordRel.get(wordIdx.get(i)));
+            }
+        }
+
+        return found;
+    }
+
+    // Get library keys
+    public HashSet<String> keys() {
+        return new HashSet<String>(wordKeys);
+    }
+
+    // Get library values
+    public List<List<List<Double>>> values() {
+        return wordRel;
+    }
 }

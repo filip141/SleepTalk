@@ -41,7 +41,12 @@ public class Mfcc{
         highFilterBankFreq = sampleRate / 2;
     }
 
+    // Return signal after VAD
+    public List<Double> getSignal(){
+        return this.signal;
+    }
 
+    // Compute Mel Cepstral Coeffs
     public List<List<Double>> compute(){
         double cepstralSum;
         double melFilterBankSum;
