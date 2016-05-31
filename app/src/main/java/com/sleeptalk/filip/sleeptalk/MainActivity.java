@@ -18,6 +18,7 @@ import android.widget.Button;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 
@@ -47,39 +48,50 @@ public class MainActivity extends AppCompatActivity {
         m=MediaPlayer.create(MainActivity.this,R.raw.ding);
         final WavRecord wv = new WavRecord();
 
-        recButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                recButton.setEnabled(false);
-                m.start();
-                Handler handlerStart = new Handler();
-                handlerStart.postDelayed(new Runnable() {
-                    public void run() {
-                        wv.startRecording();
-                    }
-                }, 1100);
-                Handler handler = new Handler();
-                handler.postDelayed(new Runnable() {
-                    public void run() {
-                        fileName = wv.stopRecording();
-                        WavFile file = new WavFile(fileName);
-                        List<List<Double>> mfccCoefs = mfccComputing(file);
-                        wv.deleteFile();
-                        HashSet<String> keys = lib.keys();
-                        List<List<List<Double>>> mfccList;
-                        for(String key: keys){
-                            mfccList = lib.get(key);
-                            for(List<List<Double>> mfccRel : mfccList){
-                                Log.i("aa", "bb");
-
-                            }
+        if (recButton != null) {
+            recButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    recButton.setEnabled(false);
+                    m.start();
+                    Handler handlerStart = new Handler();
+                    handlerStart.postDelayed(new Runnable() {
+                        public void run() {
+                            wv.startRecording();
                         }
-                        recButton.setEnabled(true);
-                    }
-                }, 2800);
+                    }, 1100);
+                    Handler handler = new Handler();
+                    handler.postDelayed(new Runnable() {
+                        public void run() {
+                            double dynamicResult;
+                            double finalResult;
+                            // Process input
+                            fileName = wv.stopRecording();
+                            WavFile file = new WavFile(fileName);
+                            List<List<Double>> mfccCoefs = mfccComputing(file);
+                            DTW dynamicCompare = new DTW(mfccCoefs);
+                            wv.deleteFile();
+                            HashSet<String> keys = lib.keys();
+                            List<List<List<Double>>> mfccList;
+                            List<Double> finalList = new ArrayList<>();
+                            List<String> keyList = new ArrayList<>();
+                            for(String key: keys){
+                                mfccList = lib.get(key);
+                                for(List<List<Double>> mfccRel : mfccList){
+                                    dynamicResult = dynamicCompare.computeMatrix(mfccRel);
+                                    finalList.add(dynamicResult);
+                                    keyList.add(key);
+                                }
+                            }
+                            finalResult = Collections.min(finalList);
+                            Log.i("wynik", ""+keyList.get(finalList.indexOf(finalResult)));
+                            recButton.setEnabled(true);
+                        }
+                    }, 2800);
 
-            }
-        });
+                }
+            });
+        }
 
     }
 
@@ -107,12 +119,6 @@ public class MainActivity extends AppCompatActivity {
         List<Double> stdSignal = signalParams.first;
         int sampleRate = signalParams.second;
         Mfcc mfcc = new Mfcc(stdSignal, sampleRate);
-        try {
-            stdSignal.addAll(mfcc.getSignal());
-            datafile.save(stdSignal);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
         return mfcc.compute();
     }
 }

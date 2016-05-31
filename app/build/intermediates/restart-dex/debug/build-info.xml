@@ -4,7 +4,7 @@
     api-level="21"
     density="tvdpi"
     format="7"
-    timestamp="37116428363071" >
+    timestamp="44451144195745" >
 
     <task
         name="javac"
@@ -24,11 +24,11 @@
             location="/home/filip/AndroidStudioProjects/SleepTalk/app/build/outputs/apk/app-debug.apk"
             type="MAIN" />
     </build>
-    <build timestamp="37076955066518" >
+    <build timestamp="44313083280401" >
         <artifact
             location="/home/filip/AndroidStudioProjects/SleepTalk/app/build/intermediates/transforms/dex/debug/folders/1000/5/slice_7/classes.dex"
             type="DEX" />
     </build>
-    <build timestamp="37116428363071" />
+    <build timestamp="44451144195745" />
 
 </instant-run>
