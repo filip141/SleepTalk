@@ -18,7 +18,7 @@ public class VoiceDetector {
     private static double FrameOverlap = 0.015;
     private static double distanceFromMax = 0.8;
     private static double powerCoeff = -0.93;
-    private static double linearCoeff = 0.1;
+    private static double linearCoeff = 0.079411;
 
     // Public
     public Hamming window;

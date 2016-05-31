@@ -1,2 +1,5 @@
 CHANGED,/home/filip/AndroidStudioProjects/SleepTalk/app/build/intermediates/transforms/instantRun/debug/folders/4000/5/enhanced/com/sleeptalk/filip/sleeptalk/MainActivity$override.class
+CHANGED,/home/filip/AndroidStudioProjects/SleepTalk/app/build/intermediates/transforms/instantRun/debug/folders/4000/5/enhanced/com/sleeptalk/filip/sleeptalk/MainActivity$1$2$override.class
+CHANGED,/home/filip/AndroidStudioProjects/SleepTalk/app/build/intermediates/transforms/instantRun/debug/folders/4000/5/enhanced/com/sleeptalk/filip/sleeptalk/MainActivity$1$1$override.class
+CHANGED,/home/filip/AndroidStudioProjects/SleepTalk/app/build/intermediates/transforms/instantRun/debug/folders/4000/5/enhanced/com/sleeptalk/filip/sleeptalk/MainActivity$1$override.class
 CHANGED,/home/filip/AndroidStudioProjects/SleepTalk/app/build/intermediates/transforms/instantRun/debug/folders/4000/5/enhanced/com/android/tools/fd/runtime/AppPatchesLoaderImpl.class

@@ -20,7 +20,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Timer;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -39,7 +38,6 @@ public class MainActivity extends AppCompatActivity {
         final Button recButton = (Button) findViewById(R.id.rec_button);
         startButtonAnimation(recButton);
         datafile = new FileSaver(this);
-        List<List<Double>> aa;
         try {
             lib = datafile.getListFromJSON();
         } catch (Exception e) {
@@ -110,6 +108,7 @@ public class MainActivity extends AppCompatActivity {
         int sampleRate = signalParams.second;
         Mfcc mfcc = new Mfcc(stdSignal, sampleRate);
         try {
+            stdSignal.addAll(mfcc.getSignal());
             datafile.save(stdSignal);
         } catch (IOException e) {
             e.printStackTrace();
