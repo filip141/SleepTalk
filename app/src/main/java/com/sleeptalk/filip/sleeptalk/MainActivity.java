@@ -31,17 +31,26 @@ public class MainActivity extends AppCompatActivity {
     MediaPlayer mPoprawnie;
     MediaPlayer mBlad;
     MediaPlayer mPowtorz;
+    MediaPlayer mAlarm;
     private List<String> words;
     private List<MediaPlayer> recWords;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        requestWindowFeature(android.view.Window.FEATURE_CUSTOM_TITLE);
+        getWindow().setFeatureInt(android.view.Window.FEATURE_CUSTOM_TITLE,R.layout.window_title);
         setContentView(R.layout.activity_main);
 
         // Android objects initialization
         final Button recButton = (Button) findViewById(R.id.rec_button);
+        TextMove textMove=(TextMove) findViewById(R.id.view);
+        Thread t = new Thread(new TextMoveAnim(new Handler(),textMove));
+        t.start();
+
         startButtonAnimation(recButton);
+        startTextAnimation(textMove);
+
         datafile = new FileSaver(this);
         try {
             lib = datafile.getListFromJSON();
@@ -55,6 +64,7 @@ public class MainActivity extends AppCompatActivity {
         mPoprawnie = MediaPlayer.create(MainActivity.this,R.raw.poprawnie);
         mBlad = MediaPlayer.create(MainActivity.this,R.raw.blad);
         mPowtorz = MediaPlayer.create(MainActivity.this,R.raw.jeszcze_raz);
+        mAlarm = MediaPlayer.create(MainActivity.this,R.raw.alarm);
         MediaPlayer mButelka = MediaPlayer.create(MainActivity.this,R.raw.butelka);
         MediaPlayer mMetoda = MediaPlayer.create(MainActivity.this,R.raw.metoda);
         MediaPlayer mRoznice = MediaPlayer.create(MainActivity.this,R.raw.roznice);
@@ -121,6 +131,22 @@ public class MainActivity extends AppCompatActivity {
                                             }
                                             else{
                                                 mBlad.start();
+                                                mPowtorz.start();
+                                                Thread.sleep(1000);
+                                                wv.startRecording();
+                                                Thread.sleep(2800);
+                                                fileName = wv.stopRecording();
+                                                file = new WavFile(fileName);
+                                                mfccCoefs = mfccComputing(file);
+                                                result = findWord(lib, mfccCoefs);
+                                                wv.deleteFile();
+                                                if(result.equals(desiredWord)){
+                                                    mPoprawnie.start();
+                                                }
+                                                else{
+                                                    mAlarm.start();
+                                                }
+
                                             }
 
                                         } catch (InterruptedException e) {
@@ -128,6 +154,28 @@ public class MainActivity extends AppCompatActivity {
                                         }
                                         catch(IllegalArgumentException e){
                                             mPowtorz.start();
+                                            try {
+                                                Thread.sleep(1000);
+                                            } catch (InterruptedException e1) {
+                                                e1.printStackTrace();
+                                            }
+                                            wv.startRecording();
+                                            try {
+                                                Thread.sleep(2800);
+                                            } catch (InterruptedException e1) {
+                                                e1.printStackTrace();
+                                            }
+                                            fileName = wv.stopRecording();
+                                            WavFile file = new WavFile(fileName);
+                                            List<List<Double>> mfccCoefs = mfccComputing(file);
+                                            String result = findWord(lib, mfccCoefs);
+                                            wv.deleteFile();
+                                            if(result.equals(desiredWord)){
+                                                mPoprawnie.start();
+                                            }
+                                            else{
+                                                mAlarm.start();
+                                            }
                                         }
                                         Log.i("test", "Działa");
                                     }
@@ -149,6 +197,14 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    private void startTextAnimation(TextMove textMove) {
+        final Animation animation = new AlphaAnimation(1, 0); // Change alpha from fully visible to invisible
+        animation.setDuration(2000); // duration - half a second
+        animation.setInterpolator(new LinearInterpolator()); // do not alter animation rate
+        animation.setRepeatCount(Animation.INFINITE); // Repeat animation infinitely
+        animation.setRepeatMode(Animation.REVERSE); // Reverse animation at the end so the button will fade back in
+        textMove.startAnimation(animation);
+    }
 
 
     public void startButtonAnimation(Button button) {

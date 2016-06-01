@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal" android:layout_width="fill_parent"
+    android:layout_height="50dip"
+    android:gravity="center_vertical"
+    android:paddingLeft="5dip"
+    android:background="#2e2e2e">
+
+    <ImageView
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:id="@+id/imageView"
+        android:src="@drawable/ikona"
+        android:background="#FFFFFF"
+        android:adjustViewBounds="false"
+        android:layout_marginLeft="5dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="SleepTalk"
+        android:id="@+id/textView"
+        android:layout_gravity="center_vertical"
+        android:textColor="#ff6600"
+        android:textStyle="bold"
+        android:layout_marginLeft="20dp" />
+</LinearLayout>
