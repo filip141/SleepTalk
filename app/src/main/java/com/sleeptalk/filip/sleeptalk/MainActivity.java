@@ -1,10 +1,6 @@
 package com.sleeptalk.filip.sleeptalk;
 
-import android.media.AudioFormat;
-import android.media.AudioRecord;
 import android.media.MediaPlayer;
-import android.os.Handler;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -15,7 +11,6 @@ import android.view.animation.Animation;
 import android.view.animation.LinearInterpolator;
 import android.widget.Button;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -24,10 +19,14 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
+    private Thread sleepTalkThread;
+    private boolean turnedOn;
     private FileSaver datafile;
     private WordLibrary lib;
     private String fileName;
-    private MediaPlayer m ;
+    private MediaPlayer m_ding;
+    private MediaPlayer m_wlaczono;
+    private MediaPlayer m_butelka;
 
 
     @Override
@@ -45,38 +44,86 @@ public class MainActivity extends AppCompatActivity {
             e.printStackTrace();
         }
         // Initialize media types
-        m=MediaPlayer.create(MainActivity.this,R.raw.ding);
+        m_ding =MediaPlayer.create(MainActivity.this,R.raw.ding);
+        m_wlaczono=MediaPlayer.create(MainActivity.this,R.raw.wlaczono_sleeptalk);
+        m_butelka=MediaPlayer.create(MainActivity.this,R.raw.butelka);
         final WavRecord wv = new WavRecord();
-
         if (recButton != null) {
             recButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     recButton.setEnabled(false);
-                    m.start();
-                    Handler handlerStart = new Handler();
-                    handlerStart.postDelayed(new Runnable() {
-                        public void run() {
-                            wv.startRecording();
-                        }
-                    }, 1100);
-                    Handler handler = new Handler();
-                    handler.postDelayed(new Runnable() {
-                        public void run() {
-                            // Process input
-                            fileName = wv.stopRecording();
-                            WavFile file = new WavFile(fileName);
-                            try{
-                                List<List<Double>> mfccCoefs = mfccComputing(file);
-                                String result = findWord(lib, mfccCoefs);
+                    if(turnedOn){
+                        Log.i("test", "Wyłączamy");
+                        turnedOn = false;
+                    }
+                    else{
+                        Log.i("test", "Włączamy");
+                        m_wlaczono.start();
+                        turnedOn = true;
+                        sleepTalkThread = new Thread(new Runnable() {
+                            @Override
+                            public void run() {
+                                // First wait
+                                try {
+                                    Thread.sleep(5000);
+                                } catch (InterruptedException e) {
+                                    e.printStackTrace();
+                                }
+                                while(true){
+                                    // Close thread when button pressed
+                                    if(!turnedOn){
+                                        break;
+                                    }
+                                    else{
+                                        m_butelka.start();
+                                        try {
+                                            Thread.sleep(15000);
+                                        } catch (InterruptedException e) {
+                                            e.printStackTrace();
+                                        }
+                                        m_ding.start();
+                                        Log.i("test", "Działa");
+                                    }
+                                    // Wait
+                                    try {
+                                        Thread.sleep(60000);
+                                    } catch (InterruptedException e) {
+                                        e.printStackTrace();
+                                    }
+                                }
                             }
-                            catch(IllegalArgumentException e){
+                        });
+                        sleepTalkThread.start();
+                    }
+                    recButton.setEnabled(true);
 
-                            }
-                            wv.deleteFile();
-                            recButton.setEnabled(true);
-                        }
-                    }, 2800);
+
+
+//                    m_ding.start();
+//                    Handler handlerStart = new Handler();
+//                    handlerStart.postDelayed(new Runnable() {
+//                        public void run() {
+//                            wv.startRecording();
+//                        }
+//                    }, 1100);
+//                    Handler handler = new Handler();
+//                    handler.postDelayed(new Runnable() {
+//                        public void run() {
+//                            // Process input
+//                            fileName = wv.stopRecording();
+//                            WavFile file = new WavFile(fileName);
+//                            try{
+//                                List<List<Double>> mfccCoefs = mfccComputing(file);
+//                                String result = findWord(lib, mfccCoefs);
+//                            }
+//                            catch(IllegalArgumentException e){
+//
+//                            }
+//                            wv.deleteFile();
+
+//                        }
+//                    }, 2800);
 
                 }
             });

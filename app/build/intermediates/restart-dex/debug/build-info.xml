@@ -4,28 +4,36 @@
     api-level="21"
     density="tvdpi"
     format="7"
-    timestamp="3227369434423" >
+    timestamp="9656782327816" >
 
     <task
         name="javac"
-        duration="139" />
+        duration="40" />
     <task
         name="instant-run-dex"
         duration="0" />
     <task
         name="instant-run-transform"
-        duration="93" />
+        duration="14" />
     <task
         name="verifier"
-        duration="24" />
+        duration="0" />
 
-    <build timestamp="2722838504222" >
+    <artifact
+        location="/home/filip/AndroidStudioProjects/SleepTalk/app/build/intermediates/transforms/dex/debug/folders/1000/5/slice_7/classes.dex"
+        type="DEX" />
+
+    <build timestamp="7657376853628" >
         <artifact
             location="/home/filip/AndroidStudioProjects/SleepTalk/app/build/outputs/apk/app-debug.apk"
             type="MAIN" />
     </build>
-    <build timestamp="3227369434423" />
-    <build timestamp="44797026261038" >
+    <build timestamp="8996079960366" >
+        <artifact
+            location="/home/filip/AndroidStudioProjects/SleepTalk/app/build/intermediates/res/resources-debug.ap_"
+            type="RESOURCES" />
+    </build>
+    <build timestamp="9656782327816" >
         <artifact
             location="/home/filip/AndroidStudioProjects/SleepTalk/app/build/intermediates/transforms/dex/debug/folders/1000/5/slice_7/classes.dex"
             type="DEX" />
