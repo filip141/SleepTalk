@@ -10,6 +10,16 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.sleeptalk.filip.sleeptalk.MainActivity">
 
+    <ImageView
+        android:id="@+id/imageView_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_sleeptalk"
+        android:layout_alignParentTop="true"
+        android:layout_above="@+id/rec_button"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true" />
+
     <Button
         android:layout_width="200dp"
         android:layout_height="200dp"
