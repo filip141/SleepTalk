@@ -1,3 +1,61 @@
 <?xml version="1.0" encoding="utf-8"?>
-<items version="2" />
+<items version="2" >
 
+    <item
+        jar="/home/filip/Android/Sdk/extras/android/m2repository/com/android/support/support-annotations/23.3.0/support-annotations-23.3.0.jar"
+        jumboMode="true"
+        revision="23.0.3"
+        sha1="db7791d75a07fef9844d06236c1c59ba7bf6997c">
+        <dex dex="/home/filip/AndroidStudioProjects/SleepTalk/app/build/intermediates/transforms/dex/debug/folders/1000/10/support-annotations-23.3.0_8e0881bcd9e69a32f1515ab3cc676aea9f6dc710/classes.dex" />
+    </item>
+    <item
+        jar="/home/filip/AndroidStudioProjects/SleepTalk/app/build/intermediates/exploded-aar/com.android.support/animated-vector-drawable/23.3.0/jars/classes.jar"
+        jumboMode="true"
+        revision="23.0.3"
+        sha1="23be6993826b8fd88bbc8d14928bb3b8960d3d4e">
+        <dex dex="/home/filip/AndroidStudioProjects/SleepTalk/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.android.support-animated-vector-drawable-23.3.0_0e633bc406a9dab23c0641eb21bc483af34797cb/classes.dex" />
+    </item>
+    <item
+        jar="/home/filip/AndroidStudioProjects/SleepTalk/app/build/intermediates/incremental-runtime-classes/debug/instant-run.jar"
+        jumboMode="true"
+        revision="23.0.3"
+        sha1="920f3691a7ca906d6d50db30f355c5d04aece588">
+        <dex dex="/home/filip/AndroidStudioProjects/SleepTalk/app/build/intermediates/transforms/dex/debug/folders/1000/10/instant-run_170ce773adc8567b8d88c6547be1ae0720969ec4/classes.dex" />
+    </item>
+    <item
+        jar="/home/filip/AndroidStudioProjects/SleepTalk/app/build/intermediates/exploded-aar/com.android.support/support-v4/23.3.0/jars/libs/internal_impl-23.3.0.jar"
+        jumboMode="true"
+        revision="23.0.3"
+        sha1="4da5a4d697d32497c6f85567a5112e62fdfd0676">
+        <dex dex="/home/filip/AndroidStudioProjects/SleepTalk/app/build/intermediates/transforms/dex/debug/folders/1000/10/internal_impl-23.3.0_30a15e15b4a2c43843d3845bb383a7fe56d48c43/classes.dex" />
+    </item>
+    <item
+        jar="/home/filip/AndroidStudioProjects/SleepTalk/app/build/intermediates/incremental-classes/debug/instant-run-bootstrap.jar"
+        jumboMode="true"
+        revision="23.0.3"
+        sha1="a438349300170d0bbdd33b1c7ed3b400739f1947">
+        <dex dex="/home/filip/AndroidStudioProjects/SleepTalk/app/build/intermediates/transforms/dex/debug/folders/1000/10/instant-run-bootstrap_4e5dfd4cb6c34d275f9a480f0efe713e3a82da32/classes.dex" />
+    </item>
+    <item
+        jar="/home/filip/AndroidStudioProjects/SleepTalk/app/build/intermediates/exploded-aar/com.android.support/support-vector-drawable/23.3.0/jars/classes.jar"
+        jumboMode="true"
+        revision="23.0.3"
+        sha1="a0b5d60246cd9d4f3f2443611b3b4c25265840b5">
+        <dex dex="/home/filip/AndroidStudioProjects/SleepTalk/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.android.support-support-vector-drawable-23.3.0_70b4652810e18cb8069f8ce5f1493142af89b59a/classes.dex" />
+    </item>
+    <item
+        jar="/home/filip/AndroidStudioProjects/SleepTalk/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/jars/classes.jar"
+        jumboMode="true"
+        revision="23.0.3"
+        sha1="1b8e03daaa43fb0a4cd57e378167c2fd70454c1e">
+        <dex dex="/home/filip/AndroidStudioProjects/SleepTalk/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.android.support-appcompat-v7-23.3.0_7ba49911cb4a3ea945e56b42cbf02c3ccf035bda/classes.dex" />
+    </item>
+    <item
+        jar="/home/filip/AndroidStudioProjects/SleepTalk/app/build/intermediates/exploded-aar/com.android.support/support-v4/23.3.0/jars/classes.jar"
+        jumboMode="true"
+        revision="23.0.3"
+        sha1="8a034dd16c0dfd75fe86c52c2cd581592acc684a">
+        <dex dex="/home/filip/AndroidStudioProjects/SleepTalk/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.android.support-support-v4-23.3.0_40541f5973ff0c4cd2f4d4db22fbfbc4980ed125/classes.dex" />
+    </item>
+
+</items>

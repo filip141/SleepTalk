@@ -38,9 +38,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        requestWindowFeature(android.view.Window.FEATURE_CUSTOM_TITLE);
-        getWindow().setFeatureInt(android.view.Window.FEATURE_CUSTOM_TITLE,R.layout.window_title);
-        setContentView(R.layout.activity_main);
+       setContentView(R.layout.activity_main);
 
         // Android objects initialization
         final Button recButton = (Button) findViewById(R.id.rec_button);
@@ -65,11 +63,13 @@ public class MainActivity extends AppCompatActivity {
         mBlad = MediaPlayer.create(MainActivity.this,R.raw.blad);
         mPowtorz = MediaPlayer.create(MainActivity.this,R.raw.jeszcze_raz);
         mAlarm = MediaPlayer.create(MainActivity.this,R.raw.alarm);
+
         MediaPlayer mButelka = MediaPlayer.create(MainActivity.this,R.raw.butelka);
         MediaPlayer mMetoda = MediaPlayer.create(MainActivity.this,R.raw.metoda);
         MediaPlayer mRoznice = MediaPlayer.create(MainActivity.this,R.raw.roznice);
         MediaPlayer mCzlowiek = MediaPlayer.create(MainActivity.this,R.raw.czlowiek);
         MediaPlayer mTelefon = MediaPlayer.create(MainActivity.this,R.raw.telefon);
+        final MediaPlayer mWylacz = MediaPlayer.create(MainActivity.this,R.raw.wylacz);
         recWords.add(mButelka);
         recWords.add(mMetoda);
         recWords.add(mRoznice);
@@ -83,12 +83,12 @@ public class MainActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View v) {
                     recButton.setEnabled(false);
+                    // SleepTalk turned on or off
                     if(turnedOn){
-                        Log.i("test", "Wyłączamy");
+                        mWylacz.start();
                         turnedOn = false;
                     }
                     else{
-                        Log.i("test", "Włączamy");
                         mWlaczono.start();
                         turnedOn = true;
                         sleepTalkThread = new Thread(new Runnable() {
@@ -97,11 +97,12 @@ public class MainActivity extends AppCompatActivity {
                                 int mPlayerIndex;
                                 int min = 0;
                                 String desiredWord;
+                                String result;
                                 int max = recWords.size() - 1;
                                 Random r = new Random();
                                 // First wait
                                 try {
-                                    Thread.sleep(5000);
+                                    Thread.sleep(4000);
                                 } catch (InterruptedException e) {
                                     e.printStackTrace();
                                 }
@@ -111,73 +112,48 @@ public class MainActivity extends AppCompatActivity {
                                         break;
                                     }
                                     else{
+                                        // Take random word
                                         mPlayerIndex = r.nextInt(max - min + 1) + min;
                                         desiredWord = words.get(mPlayerIndex);
                                         recWords.get(mPlayerIndex).start();
-
                                         try {
-                                            Thread.sleep(10000);
-                                            mDing.start();
-                                            Thread.sleep(1100);
-                                            wv.startRecording();
-                                            Thread.sleep(2800);
-                                            fileName = wv.stopRecording();
-                                            WavFile file = new WavFile(fileName);
-                                            List<List<Double>> mfccCoefs = mfccComputing(file);
-                                            String result = findWord(lib, mfccCoefs);
-                                            wv.deleteFile();
+                                            result = processWord(wv);
                                             if(result.equals(desiredWord)){
                                                 mPoprawnie.start();
                                             }
                                             else{
                                                 mBlad.start();
+                                                Thread.sleep(1100);
                                                 mPowtorz.start();
-                                                Thread.sleep(1000);
-                                                wv.startRecording();
-                                                Thread.sleep(2800);
-                                                fileName = wv.stopRecording();
-                                                file = new WavFile(fileName);
-                                                mfccCoefs = mfccComputing(file);
-                                                result = findWord(lib, mfccCoefs);
-                                                wv.deleteFile();
+                                                result = processWord(wv);
                                                 if(result.equals(desiredWord)){
                                                     mPoprawnie.start();
                                                 }
                                                 else{
-                                                    mAlarm.start();
+                                                    mBlad.start();
                                                 }
-
                                             }
-
                                         } catch (InterruptedException e) {
                                             e.printStackTrace();
                                         }
                                         catch(IllegalArgumentException e){
                                             mPowtorz.start();
                                             try {
-                                                Thread.sleep(1000);
+                                                Thread.sleep(1100);
+                                                result = processWord(wv);
+                                                if(result.equals(desiredWord)){
+                                                    mPoprawnie.start();
+                                                }
+                                                else{
+                                                    mBlad.start();
+                                                }
                                             } catch (InterruptedException e1) {
                                                 e1.printStackTrace();
                                             }
-                                            wv.startRecording();
-                                            try {
-                                                Thread.sleep(2800);
-                                            } catch (InterruptedException e1) {
-                                                e1.printStackTrace();
-                                            }
-                                            fileName = wv.stopRecording();
-                                            WavFile file = new WavFile(fileName);
-                                            List<List<Double>> mfccCoefs = mfccComputing(file);
-                                            String result = findWord(lib, mfccCoefs);
-                                            wv.deleteFile();
-                                            if(result.equals(desiredWord)){
-                                                mPoprawnie.start();
-                                            }
-                                            else{
+                                            catch(IllegalArgumentException e2) {
                                                 mAlarm.start();
                                             }
                                         }
-                                        Log.i("test", "Działa");
                                     }
                                     // Wait
                                     try {
@@ -263,6 +239,20 @@ public class MainActivity extends AppCompatActivity {
         wordList.add("człowiek");
         wordList.add("telefon");
         return wordList;
+    }
+
+    public String processWord(WavRecord wv) throws InterruptedException {
+        Thread.sleep(10000);
+        mDing.start();
+        Thread.sleep(1100);
+        wv.startRecording();
+        Thread.sleep(2800);
+        fileName = wv.stopRecording();
+        WavFile file = new WavFile(fileName);
+        List<List<Double>> mfccCoefs = mfccComputing(file);
+        String result = findWord(lib, mfccCoefs);
+        wv.deleteFile();
+        return result;
     }
 
 }
