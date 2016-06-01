@@ -144,6 +144,14 @@ public class VoiceDetector {
         return signal;
     }
 
+    // Check signal existence in binary list
+    public boolean isZeros(List<Integer> signalBin){
+        if(signalBin.indexOf(1) > 0){
+            return false;
+        }
+        return true;
+    }
+
     // Detect signal and remove silence from it
     public List<Double> removeSilence(){
 
@@ -156,6 +164,7 @@ public class VoiceDetector {
         int secondIndex;
         int counter = 0;
         double trigger = 0;
+        double measListMaxValue;
 
         List<Double> frame;
         List<ComplexNumber> framePSD;
@@ -184,8 +193,9 @@ public class VoiceDetector {
             frameZCR = (1.0 / frameLength)*findZeroCrossingRate(frame);
             measList.add(framePower * (1 - frameZCR));
         }
+        measListMaxValue = Statistics.max(measList);
         for(Double sample: measList){
-            sample = sample / Statistics.max(measList);
+            sample = sample / measListMaxValue;
             // Collect 10 frames
             if(counter < 10){
                 weight.add(sample);
@@ -203,6 +213,9 @@ public class VoiceDetector {
                 }
             }
             counter++;
+        }
+        if(isZeros(signalBinary)){
+            return null;
         }
         signalBinary = humanInner(signalBinary);
         Pair<Integer, Integer> points =  cutSig(signalBinary);

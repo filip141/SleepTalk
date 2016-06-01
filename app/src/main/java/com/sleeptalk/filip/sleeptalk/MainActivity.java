@@ -63,28 +63,17 @@ public class MainActivity extends AppCompatActivity {
                     Handler handler = new Handler();
                     handler.postDelayed(new Runnable() {
                         public void run() {
-                            double dynamicResult;
-                            double finalResult;
                             // Process input
                             fileName = wv.stopRecording();
                             WavFile file = new WavFile(fileName);
-                            List<List<Double>> mfccCoefs = mfccComputing(file);
-                            DTW dynamicCompare = new DTW(mfccCoefs);
-                            wv.deleteFile();
-                            HashSet<String> keys = lib.keys();
-                            List<List<List<Double>>> mfccList;
-                            List<Double> finalList = new ArrayList<>();
-                            List<String> keyList = new ArrayList<>();
-                            for(String key: keys){
-                                mfccList = lib.get(key);
-                                for(List<List<Double>> mfccRel : mfccList){
-                                    dynamicResult = dynamicCompare.computeMatrix(mfccRel);
-                                    finalList.add(dynamicResult);
-                                    keyList.add(key);
-                                }
+                            try{
+                                List<List<Double>> mfccCoefs = mfccComputing(file);
+                                String result = findWord(lib, mfccCoefs);
                             }
-                            finalResult = Collections.min(finalList);
-                            Log.i("wynik", ""+keyList.get(finalList.indexOf(finalResult)));
+                            catch(IllegalArgumentException e){
+
+                            }
+                            wv.deleteFile();
                             recButton.setEnabled(true);
                         }
                     }, 2800);
@@ -119,6 +108,30 @@ public class MainActivity extends AppCompatActivity {
         List<Double> stdSignal = signalParams.first;
         int sampleRate = signalParams.second;
         Mfcc mfcc = new Mfcc(stdSignal, sampleRate);
+        if(mfcc.isSignalNull()){
+            throw new IllegalArgumentException();
+        }
         return mfcc.compute();
     }
+
+    public String findWord(WordLibrary lib, List<List<Double>> mfccCoefs){
+        double dynamicResult;
+        double finalResult;
+        DTW dynamicCompare = new DTW(mfccCoefs);
+        HashSet<String> keys = lib.keys();
+        List<List<List<Double>>> mfccList;
+        List<Double> finalList = new ArrayList<>();
+        List<String> keyList = new ArrayList<>();
+        for(String key: keys){
+            mfccList = lib.get(key);
+            for(List<List<Double>> mfccRel : mfccList){
+                dynamicResult = dynamicCompare.computeMatrix(mfccRel);
+                finalList.add(dynamicResult);
+                keyList.add(key);
+            }
+        }
+        finalResult = Collections.min(finalList);
+        return keyList.get(finalList.indexOf(finalResult));
+    }
+
 }

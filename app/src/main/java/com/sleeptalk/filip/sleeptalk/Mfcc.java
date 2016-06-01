@@ -41,6 +41,14 @@ public class Mfcc{
         highFilterBankFreq = sampleRate / 2;
     }
 
+    // Signal is NULL VAD failed
+    public boolean isSignalNull(){
+        if(signal == null){
+            return true;
+        }
+        return false;
+    }
+
     // Return signal after VAD
     public List<Double> getSignal(){
         return this.signal;
