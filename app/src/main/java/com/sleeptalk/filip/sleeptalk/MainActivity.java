@@ -1,6 +1,7 @@
 package com.sleeptalk.filip.sleeptalk;
 
 import android.media.MediaPlayer;
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -16,6 +17,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Random;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -24,10 +26,13 @@ public class MainActivity extends AppCompatActivity {
     private FileSaver datafile;
     private WordLibrary lib;
     private String fileName;
-    private MediaPlayer m_ding;
-    private MediaPlayer m_wlaczono;
-    private MediaPlayer m_butelka;
-
+    MediaPlayer mDing;
+    MediaPlayer mWlaczono;
+    MediaPlayer mPoprawnie;
+    MediaPlayer mBlad;
+    MediaPlayer mPowtorz;
+    private List<String> words;
+    private List<MediaPlayer> recWords;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,10 +48,25 @@ public class MainActivity extends AppCompatActivity {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        // Initialize media types
-        m_ding =MediaPlayer.create(MainActivity.this,R.raw.ding);
-        m_wlaczono=MediaPlayer.create(MainActivity.this,R.raw.wlaczono_sleeptalk);
-        m_butelka=MediaPlayer.create(MainActivity.this,R.raw.butelka);
+        // Initialize media types and add them to list
+        recWords = new ArrayList<>();
+        mDing = MediaPlayer.create(MainActivity.this,R.raw.ding);
+        mWlaczono = MediaPlayer.create(MainActivity.this,R.raw.wlaczono_sleeptalk);
+        mPoprawnie = MediaPlayer.create(MainActivity.this,R.raw.poprawnie);
+        mBlad = MediaPlayer.create(MainActivity.this,R.raw.blad);
+        mPowtorz = MediaPlayer.create(MainActivity.this,R.raw.jeszcze_raz);
+        MediaPlayer mButelka = MediaPlayer.create(MainActivity.this,R.raw.butelka);
+        MediaPlayer mMetoda = MediaPlayer.create(MainActivity.this,R.raw.metoda);
+        MediaPlayer mRoznice = MediaPlayer.create(MainActivity.this,R.raw.roznice);
+        MediaPlayer mCzlowiek = MediaPlayer.create(MainActivity.this,R.raw.czlowiek);
+        MediaPlayer mTelefon = MediaPlayer.create(MainActivity.this,R.raw.telefon);
+        recWords.add(mButelka);
+        recWords.add(mMetoda);
+        recWords.add(mRoznice);
+        recWords.add(mCzlowiek);
+        recWords.add(mTelefon);
+        words = buildWordList();
+        // Initialize Wav recorder
         final WavRecord wv = new WavRecord();
         if (recButton != null) {
             recButton.setOnClickListener(new View.OnClickListener() {
@@ -59,11 +79,16 @@ public class MainActivity extends AppCompatActivity {
                     }
                     else{
                         Log.i("test", "Włączamy");
-                        m_wlaczono.start();
+                        mWlaczono.start();
                         turnedOn = true;
                         sleepTalkThread = new Thread(new Runnable() {
                             @Override
                             public void run() {
+                                int mPlayerIndex;
+                                int min = 0;
+                                String desiredWord;
+                                int max = recWords.size() - 1;
+                                Random r = new Random();
                                 // First wait
                                 try {
                                     Thread.sleep(5000);
@@ -76,13 +101,34 @@ public class MainActivity extends AppCompatActivity {
                                         break;
                                     }
                                     else{
-                                        m_butelka.start();
+                                        mPlayerIndex = r.nextInt(max - min + 1) + min;
+                                        desiredWord = words.get(mPlayerIndex);
+                                        recWords.get(mPlayerIndex).start();
+
                                         try {
-                                            Thread.sleep(15000);
+                                            Thread.sleep(10000);
+                                            mDing.start();
+                                            Thread.sleep(1100);
+                                            wv.startRecording();
+                                            Thread.sleep(2800);
+                                            fileName = wv.stopRecording();
+                                            WavFile file = new WavFile(fileName);
+                                            List<List<Double>> mfccCoefs = mfccComputing(file);
+                                            String result = findWord(lib, mfccCoefs);
+                                            wv.deleteFile();
+                                            if(result.equals(desiredWord)){
+                                                mPoprawnie.start();
+                                            }
+                                            else{
+                                                mBlad.start();
+                                            }
+
                                         } catch (InterruptedException e) {
                                             e.printStackTrace();
                                         }
-                                        m_ding.start();
+                                        catch(IllegalArgumentException e){
+                                            mPowtorz.start();
+                                        }
                                         Log.i("test", "Działa");
                                     }
                                     // Wait
@@ -97,34 +143,6 @@ public class MainActivity extends AppCompatActivity {
                         sleepTalkThread.start();
                     }
                     recButton.setEnabled(true);
-
-
-
-//                    m_ding.start();
-//                    Handler handlerStart = new Handler();
-//                    handlerStart.postDelayed(new Runnable() {
-//                        public void run() {
-//                            wv.startRecording();
-//                        }
-//                    }, 1100);
-//                    Handler handler = new Handler();
-//                    handler.postDelayed(new Runnable() {
-//                        public void run() {
-//                            // Process input
-//                            fileName = wv.stopRecording();
-//                            WavFile file = new WavFile(fileName);
-//                            try{
-//                                List<List<Double>> mfccCoefs = mfccComputing(file);
-//                                String result = findWord(lib, mfccCoefs);
-//                            }
-//                            catch(IllegalArgumentException e){
-//
-//                            }
-//                            wv.deleteFile();
-
-//                        }
-//                    }, 2800);
-
                 }
             });
         }
@@ -179,6 +197,16 @@ public class MainActivity extends AppCompatActivity {
         }
         finalResult = Collections.min(finalList);
         return keyList.get(finalList.indexOf(finalResult));
+    }
+
+    public List<String> buildWordList(){
+        List<String> wordList = new ArrayList<>();
+        wordList.add("butelka");
+        wordList.add("metoda");
+        wordList.add("różnice");
+        wordList.add("człowiek");
+        wordList.add("telefon");
+        return wordList;
     }
 
 }
