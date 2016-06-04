@@ -1,6 +1,7 @@
 package com.sleeptalk.filip.sleeptalk;
 
 import android.app.Activity;
+import android.content.res.AssetManager;
 import android.media.MediaPlayer;
 import android.os.Handler;
 import android.os.Bundle;
@@ -42,7 +43,6 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
        setContentView(R.layout.activity_main);
 
-        saveJSONtoCache();
         // Android objects initialization
         final Button recButton = (Button) findViewById(R.id.rec_button);
         TextMove textMove=(TextMove) findViewById(R.id.view);
@@ -54,7 +54,7 @@ public class MainActivity extends Activity {
 
         datafile = new FileSaver(this);
         try {
-            lib = datafile.getListFromJSON(getCacheDir().toString());
+            lib = datafile.getListFromJSON(datafile.loadJSONFromAssets());
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -176,23 +176,6 @@ public class MainActivity extends Activity {
 
     }
 
-    private void saveJSONtoCache() {
-        File f = new File(getCacheDir()+"/final.json");
-        if (!f.exists()) try {
-
-            InputStream is = getAssets().open("final.json");
-            int size = is.available();
-            byte[] buffer = new byte[size];
-            is.read(buffer);
-            is.close();
-
-
-            FileOutputStream fos = new FileOutputStream(f);
-            fos.write(buffer);
-            fos.close();
-        } catch (Exception e) { throw new RuntimeException(e); }
-    }
-
     private void startTextAnimation(TextMove textMove) {
         final Animation animation = new AlphaAnimation(1, 0); // Change alpha from fully visible to invisible
         animation.setDuration(2000); // duration - half a second
@@ -274,5 +257,7 @@ public class MainActivity extends Activity {
         wv.deleteFile();
         return result;
     }
+
+
 
 }

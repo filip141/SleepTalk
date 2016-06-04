@@ -3,6 +3,7 @@ import android.content.Context;
 import android.os.Environment;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
@@ -14,6 +15,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -26,11 +28,12 @@ import java.util.List;
 public class FileSaver{
 
     private static final String datafile = "//sdcard//data_file.txt";
-
+    Context activity;
     private static final String JSON_NAME = "/final.json";
     private BufferedWriter fileWriter;
 
     public FileSaver(Context activity) {
+        this.activity=activity;
         try {
             fileWriter = new BufferedWriter(new FileWriter(datafile));
         } catch (IOException e) {
@@ -97,6 +100,34 @@ public class FileSaver{
         }
     }
 
+    public JSONObject loadJSONFromAssets()
+    {
+        String json = null;
+        JSONObject jo = null;
+        try
+        {
+            InputStream is = activity.getAssets().open("final.json");
+            int size = is.available();
+            byte[] buffer =new byte[size];
+            is.read(buffer);
+            is.close();
+            json = new String(buffer);
+        }
+        catch (IOException e)
+        {
+            e.printStackTrace();
+            return null;
+        }
+        try {
+            jo= new JSONObject(json);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        return jo;
+    }
+
+
     // Save data to JSON file
     public void saveToJSON(List<List<Double>> itemList, String word, String filename) throws Exception {
         JSONObject obj = readFromJSON(filename);
@@ -112,7 +143,7 @@ public class FileSaver{
     }
 
     // Get Java ArrayList from JSON object
-    public WordLibrary getListFromJSON(String cacheDir) throws Exception {
+    public WordLibrary getListFromJSON(JSONObject obj) throws Exception {
         List<String> mfccCoeffs;
         int coeffsNumber = 39;
         JSONArray jsonList;
@@ -120,7 +151,6 @@ public class FileSaver{
         String jsonKey;
         List<Double> coeffs;
         List<List<Double>> mellVectors;
-        JSONObject obj = readFromJSON(cacheDir+JSON_NAME);
         Iterator<String> iter = obj.keys();
         List<String> wordKeys = new ArrayList<>();
         List<List<List<Double>>> wordRel = new ArrayList<>();
@@ -167,6 +197,8 @@ final class WordLibrary {
         }
         return indexes;
     }
+
+
 
     // Get found elements
     public List<List<List<Double>>> get(String key) {
