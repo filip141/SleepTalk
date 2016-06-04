@@ -1,10 +1,9 @@
 package com.sleeptalk.filip.sleeptalk;
 
+import android.app.Activity;
 import android.media.MediaPlayer;
 import android.os.Handler;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.util.Pair;
 import android.view.View;
 import android.view.animation.AlphaAnimation;
@@ -12,6 +11,9 @@ import android.view.animation.Animation;
 import android.view.animation.LinearInterpolator;
 import android.widget.Button;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -19,7 +21,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends Activity {
 
     private Thread sleepTalkThread;
     private boolean turnedOn;
@@ -40,6 +42,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
        setContentView(R.layout.activity_main);
 
+        saveJSONtoCache();
         // Android objects initialization
         final Button recButton = (Button) findViewById(R.id.rec_button);
         TextMove textMove=(TextMove) findViewById(R.id.view);
@@ -51,7 +54,7 @@ public class MainActivity extends AppCompatActivity {
 
         datafile = new FileSaver(this);
         try {
-            lib = datafile.getListFromJSON();
+            lib = datafile.getListFromJSON(getCacheDir().toString());
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -171,6 +174,23 @@ public class MainActivity extends AppCompatActivity {
             });
         }
 
+    }
+
+    private void saveJSONtoCache() {
+        File f = new File(getCacheDir()+"/final.json");
+        if (!f.exists()) try {
+
+            InputStream is = getAssets().open("final.json");
+            int size = is.available();
+            byte[] buffer = new byte[size];
+            is.read(buffer);
+            is.close();
+
+
+            FileOutputStream fos = new FileOutputStream(f);
+            fos.write(buffer);
+            fos.close();
+        } catch (Exception e) { throw new RuntimeException(e); }
     }
 
     private void startTextAnimation(TextMove textMove) {

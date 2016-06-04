@@ -1,7 +1,6 @@
 package com.sleeptalk.filip.sleeptalk;
 import android.content.Context;
 import android.os.Environment;
-import android.util.Log;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -27,7 +26,8 @@ import java.util.List;
 public class FileSaver{
 
     private static final String datafile = "//sdcard//data_file.txt";
-    private static final String JSON_NAME = "final.json";
+
+    private static final String JSON_NAME = "/final.json";
     private BufferedWriter fileWriter;
 
     public FileSaver(Context activity) {
@@ -112,7 +112,7 @@ public class FileSaver{
     }
 
     // Get Java ArrayList from JSON object
-    public WordLibrary getListFromJSON() throws Exception {
+    public WordLibrary getListFromJSON(String cacheDir) throws Exception {
         List<String> mfccCoeffs;
         int coeffsNumber = 39;
         JSONArray jsonList;
@@ -120,7 +120,7 @@ public class FileSaver{
         String jsonKey;
         List<Double> coeffs;
         List<List<Double>> mellVectors;
-        JSONObject obj = readFromJSON(JSON_NAME);
+        JSONObject obj = readFromJSON(cacheDir+JSON_NAME);
         Iterator<String> iter = obj.keys();
         List<String> wordKeys = new ArrayList<>();
         List<List<List<Double>>> wordRel = new ArrayList<>();
