@@ -1780,6 +1780,7 @@ containing a value of this type.
         public static final int roznice=0x7f060008;
         public static final int telefon=0x7f060009;
         public static final int wlaczono_sleeptalk=0x7f06000a;
+        public static final int wylacz=0x7f06000b;
     }
     public static final class string {
         public static final int abc_action_bar_home_description=0x7f070000;

@@ -609,6 +609,7 @@ int raw poprawnie 0x7f060007
 int raw roznice 0x7f060008
 int raw telefon 0x7f060009
 int raw wlaczono_sleeptalk 0x7f06000a
+int raw wylacz 0x7f06000b
 int string abc_action_bar_home_description 0x7f070000
 int string abc_action_bar_home_description_format 0x7f070001
 int string abc_action_bar_home_subtitle_description_format 0x7f070002
