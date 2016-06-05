@@ -10,9 +10,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * Klasa umożliwiająca otwieranie plików w formacie .wav.
+ * Klasa umożliwiająca otwieranie plików w formacie .wav oraz wydobywanie informacji z nagłówka pliku.
  * Created by filip on 28.04.16.
- * PL: Umozliwia otwieranie plików WAV
- * oraz wydobywanie informacji z nagłówka pliku.
  */
 public class WavFile {
 
@@ -33,6 +33,10 @@ public class WavFile {
     public String subchunk2ID;
 
     // Wav File Constructor
+    /**
+     * Konstruktor klasy WavFile
+     * @param filePath Ścieżka do pliku .wav.
+     */
     public WavFile(String filePath){
         try {
             InputStream is  = new FileInputStream(filePath);
@@ -45,6 +49,11 @@ public class WavFile {
     }
 
     // Read 4 Bytes String from WaveHeader
+    /**
+     * Zczytuje 4 bajty do Stringa z nagłówka pliku .wav.
+     * @return String zawierający 4 bajty nagłówka.
+     * @throws IOException
+     */
     public String read4BytesString() throws IOException {
 
         byte byteArray[] = new byte[4];
@@ -58,6 +67,11 @@ public class WavFile {
     }
 
     // Read 4 bytes int
+    /**
+     * Zczytuje 4 bajty pliku .wav do zmiennej int.
+     * @return Integer zawierajacy 4 bajty pliku .wav.
+     * @throws IOException
+     */
     public int read4BytesInt() throws IOException {
 
         byte byteArray[] = new byte[4];
@@ -72,6 +86,11 @@ public class WavFile {
     }
 
     // Read 2 bytes int
+    /**
+     * Zczytuje 2 bajty z pliku .wav do zmiennej int.
+     * @return Integer zawierający 2 bajty z pliku .wav.
+     * @throws IOException
+     */
     public int read2BytesInt() throws IOException {
 
         byte byteArray[] = new byte[2];
@@ -84,6 +103,9 @@ public class WavFile {
     }
 
     // Read Wave File Header
+    /**
+     * Zczytuje informacje z nagłówka pliku .wav.
+     */
     public void wavHeaderInfo(){
         try {
             chunkID = read4BytesString();

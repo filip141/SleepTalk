@@ -5,12 +5,12 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.PointF;
-import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.util.AttributeSet;
 import android.view.View;
 
 /**
+ * Klasa implementująca niestandardowy widok służący do wyświetlania animacji "Zzz".
  * Created by Mateusz on 2016-06-01.
  */
 public class TextMove extends View {
@@ -19,6 +19,11 @@ public class TextMove extends View {
     PointF[] letters;
     private int sign;
 
+    /**
+     * Konstruktor klasy TextMove.
+     * @param context Kontekst aktywności.
+     * @param attrs Zbiór atrybutów.
+     */
     public TextMove(Context context, AttributeSet attrs) {
         super(context, attrs);
         sign=1;
@@ -31,6 +36,9 @@ public class TextMove extends View {
         letters = new PointF[]{new PointF(80,180),new PointF(90,150),new PointF(100,120),new PointF(110,90)};
     }
 
+    /**
+     * Metoda rysująca widok.
+     */
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
@@ -40,6 +48,9 @@ public class TextMove extends View {
         }
     }
 
+    /**
+     * Metoda zmieniająca położenie liter podczas animacji.
+     */
     public void moveLetters() {
         for (int i=0;i<letters.length;i++)
         {

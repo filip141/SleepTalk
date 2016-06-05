@@ -4,12 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * Klasa służąca do ekstrakcji współczynników mel-cepstralnych.
+ * Klasa służąca do ekstrakcji cech wykorzystywanych w dalszej części przetwarzania.
+ * Zawiera ona metody takie jak hertz2Mel bądz mel2Hertz służące to konwersji ze skali melowej do skali w Hertzach, jak i również metody do tworzenia banku filtrów melowych oraz obliczania współczynników mel-cepstralnych.
  * Created by filip on 28.04.16.
- * PL: Klasa służąca do ekstrakcji cech wykorzystywanych
- * w dalszej części przetwarzania. Zawiera ona metody takie
- * jak hertz2Mel bądz mel2Hertz służące to konwersji ze skali
- * melowej do skali w Hertzach, jak i również metody do tworzenia
- * banku filtrów melowych oraz obliczania współczynników mel-cepstralnych
  */
 public class Mfcc{
 
@@ -25,11 +23,21 @@ public class Mfcc{
     private static int defaultFilters = 26;
     private static int numberOfMelCoeffs = 12;
 
+    /**
+     * Konstruktor klasy Mfcc.
+     * @param signal Sygnał dla którego będą wyliczane współczynniki Mfcc.
+     * @param sampleRate Częstotliwość próbkowania powyższego sygnału.
+     */
     public Mfcc(List<Double> signal, int sampleRate){
         this(signal, sampleRate, defaultFilters);
     }
 
-    // Store signal and sample rate, extract frame buffer and psd from vad
+    /**
+     * Konstruktor z dodatowym parametrem filters.
+     * @param signal Sygnał dla którego będą wyliczane współczynniki Mfcc.
+     * @param sampleRate Częstotliwość próbkowania powyższego sygnału.
+     * @param filters Ilość filtrów trójkątnych.
+     */
     public Mfcc(List<Double> signal, int sampleRate, int filters){
         VoiceDetector vad = new VoiceDetector(signal, sampleRate);
         this.signal = vad.removeSilence();
@@ -41,7 +49,11 @@ public class Mfcc{
         highFilterBankFreq = sampleRate / 2;
     }
 
-    // Signal is NULL VAD failed
+
+    /**
+     * Metoda sprawdza czy sygnał nie jest pusty.
+     * @return True, jeśli sygnał jest pusty lub false w przeciwnym wypadku.
+     */
     public boolean isSignalNull(){
         if(signal == null){
             return true;
@@ -49,12 +61,20 @@ public class Mfcc{
         return false;
     }
 
-    // Return signal after VAD
+
+    /**
+     * Metoda zwraca sygnał po sprawdzeniu detektorem aktywności głosowej.
+     * @return Sygnał po VAD
+     */
     public List<Double> getSignal(){
         return this.signal;
     }
 
-    // Compute Mel Cepstral Coeffs
+
+    /**
+     * Metoda wylicza współczynniki mel-cepstralne sygnału.
+     * @return Wektor współczynników Mfcc.
+     */
     public List<List<Double>> compute(){
         double cepstralSum;
         double melFilterBankSum;
@@ -110,7 +130,13 @@ public class Mfcc{
         return melCoeffsBuffor;
     }
 
-    // Add Matrices Vertically
+
+    /**
+     * Metoda służy do dodawania dwóch macierzy pionowo.
+     * @param first Pierwsza macierz.
+     * @param second Druga macierz.
+     * @return Suma macierzy.
+     */
     public List<List<Double>> addVertically(List<List<Double>> first, List<List<Double>> second)
     {
         List<Double> buffer;
@@ -126,7 +152,12 @@ public class Mfcc{
         return first;
     }
 
-    // Find delta coeffs
+
+    /**
+     * Obliczanie współczynników Delta.
+     * @param mfcc Wektor współczynników Mfcc.
+     * @return Wektor współczynników Delta.
+     */
     public List<List<Double>> findDelta(List<List<Double>> mfcc){
         List<Double> prevMfccs;
         List<Double> nextMfccs;
@@ -159,8 +190,14 @@ public class Mfcc{
         return deltaMfcc;
     }
 
-    // Build triangle filterbank to model
-    // masking phenomenon
+
+    /**
+     * Metoda buduje bank filtrów trójkątnych.
+     * @param nfft Rozdzielczość transformaty Fouriera.
+     * @param lowFrequency Dolna częstotliwość filtru.
+     * @param highFrequency Górna częstotliwość filtru.
+     * @return Bank filtrów trójkątnych.
+     */
     public List<List<Double>> melFilterBank(int nfft, double lowFrequency, double highFrequency){
         List<Double> melFilter;
         List<List<Double>> melFilterBankBuffer = new ArrayList<>();
@@ -216,16 +253,29 @@ public class Mfcc{
         return melFilterBankBuffer;
     }
 
+    /**
+     * Buduje bank filtrów trójkątnych.
+     * @param psdLength Długość widmowej gęstości mocy.
+     * @return Bank filtrów trójkątnych.
+     */
     public List<List<Double>> melFilterBank(int psdLength){
         return melFilterBank(psdLength, lowFilterBankFreq, highFilterBankFreq);
     }
 
-    // Convert Hertz frequencies to mel scale
+    /**
+     * Konwertuje częstotliwość w Hz na skalę melową.
+     * @param frequencyHertz Częstotliwość w Hz.
+     * @return Częstotliwość w skali melowej.
+     */
     public static double hertz2Mel(double frequencyHertz){
         return 1125 * Math.log(1 + frequencyHertz / 700.0);
     }
 
-    // Convert Mel scale frequency to scale in Hertz
+    /**
+     * Konwertuje częstotliwość w skali melowej na Hz
+     * @param frequencyMel Częstotliwość w skali melowej.
+     * @return Częstotliwość w Hz.
+     */
     public static double mel2Hertz(double frequencyMel){
         return 700 * (Math.exp(frequencyMel / 1125.0) - 1);
     }

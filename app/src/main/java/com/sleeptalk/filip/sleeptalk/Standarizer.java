@@ -5,12 +5,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+
 /**
+ * Klasa służąca do standaryzacji sygnału wejściowego.
+ * Klasa wykorzystywana do przeprowadzenia zabiegu standaryzacji sygnału, umożliwia wykonanie czynności które mają na celu zniwelowanie różnic między sygnałami pochodzącymi z różnych źródeł oraz usunięcie redunantnej informacji.
  * Created by filip on 01.05.16.
- * PL: Klasa wykorzystywana do przeprowadzenia zabiegu
- * standaryzacji sygnału, umożliwia wykonanie czynności
- * które mają na celu zniwelowanie różnic między sygnałami
- * pochodzącymi z różnych źródeł oraz usunięcie redunantnej informacji.
  */
 public class Standarizer {
 
@@ -20,12 +19,20 @@ public class Standarizer {
             -0.02273603655938,   0.9731072889955, -0.02273603655938, -0.01695068201474,
             -0.009835398951842, -0.00411960524828,-0.001945207254063 };
 
+    /**
+     * Konstruktor klasy Standarizer
+     * @param signal Sygnał wejściowy
+     * @param sampleRate Częstotliwość próbkowania syngału.
+     */
     public Standarizer(List<Double> signal, int sampleRate){
         this.signal = signal;
         this.sampleRate = sampleRate;
     }
 
-    // Drop every sampleRate/newFreq sample
+    /**
+     * Metoda odrzuca co simpleRate/newFreq próbkę sygnału.
+     * @param newFreq Nowa częstotliwość próbkowania.
+     */
     public void decimate(int newFreq){
         int step;
         List<Double> decimatedArray = new ArrayList<>();
@@ -50,7 +57,9 @@ public class Standarizer {
         }
     }
 
-    // Removes mean form signal and divide it by max value
+    /**
+     * Metoda usuwa składową stałą z sygnału i dzieli go przez wartość maksymalną.
+     */
     public void standard(){
         // Get maximum value
         double maxValue = Statistics.max(signal);
@@ -63,11 +72,17 @@ public class Standarizer {
     }
 
     // Preemphasis filtration
+    /**
+     * Filtracja preemfazowa.
+     */
     public void preemphasis(){
         lfilter(Arrays.asList(new Double[]{1.0, -0.9735}));
     }
 
-    // FIR Filter
+    /**
+     * Metoda implementuje filtr OOI
+     * @param coeffs Wspołczynniki filtru
+     */
     public void lfilter(List<Double> coeffs){
         double signalSample;
         double coefSample;
@@ -93,6 +108,10 @@ public class Standarizer {
         signal = outputSignal;
     }
 
+    /**
+     * Metoda zwraca sygnał po operacji standaryzacji.
+     * @return Sygnał po procesie standaryzacji.
+     */
     public Pair<List<Double>,Integer> getSignal(){
         return new Pair<List<Double>,Integer>(signal, sampleRate);
     }

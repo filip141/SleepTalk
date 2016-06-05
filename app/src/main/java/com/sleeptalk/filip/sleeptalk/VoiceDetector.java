@@ -5,9 +5,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by filip on 03.05.16.
- * PL: Autorska implementacja VAD.
+ * Autorska implementacja VAD. Autorska implementacja VAD.
  * Jej celem jest usuwanie ciszy z sygnału.
+ * Created by filip on 03.05.16.
  */
 public class VoiceDetector {
 
@@ -25,6 +25,11 @@ public class VoiceDetector {
     public List<List<Double>> framesBuffer;
     public List<List<ComplexNumber>> framesPSDBuffer;
 
+    /**
+     * Konstruktor klasy VoiceDetector.
+     * @param signal Sygnał wejściowy.
+     * @param sampleRate Częstotliwość próbkowania.
+     */
     public VoiceDetector(List<Double> signal, int sampleRate){
         this.signal = signal;
         window = new Hamming();
@@ -34,6 +39,11 @@ public class VoiceDetector {
         this.framesBuffer = signalFraming.divide(FrameTime, FrameOverlap);
     }
 
+    /**
+     * Wycina źle zaklasyfikowane fragmenty sygnału.
+     * @param signal Sygnał wejściowy.
+     * @return Sygnał wyjściowy po procesie wycinania źle zaklasyfikowanego sygnału.
+     */
     public static Pair<Integer, Integer> cutSig(List<Integer> signal){
         List<Integer> changeIndex = new ArrayList<>();
         List<Integer> areaSum = new ArrayList<>();
@@ -91,7 +101,11 @@ public class VoiceDetector {
         return new Pair<>(changeIndex.get(np), changeIndex.get(nk));
     }
 
-    // Find Zero Crossing Rate
+    /**
+     * Znajduje ilośc przejść przez zero sygnału.
+     * @param signal Sygnał wejściowy.
+     * @return Liczba przejść przez zero sygnału.
+     */
     public static int findZeroCrossingRate(List<Double> signal){
         double signalSample;
         double sampleP1;
@@ -118,7 +132,13 @@ public class VoiceDetector {
         return zerosCount;
     }
 
-    // Human voice inertion
+
+    /**
+     * Metoda uwzględnia inercję narządów mowy człowieka.
+     * Przyjmujemy, że między dwoma ramkami zaklasyfikowanymi jako sygnał nie może wystąpić ramka zaklasyfikowana jako cisza.
+     * @param signal Sygnał wejściowy.
+     * @return Sygnał pozbawiony momentów w których cisza przeplata się z sygnałem ( SCS zostaję zamienione na SSS [S - Sygnał, C - Cisza])
+     */
     public List<Integer> humanInner(List<Integer> signal){
         int sample;
         int sampleP1;
@@ -145,6 +165,11 @@ public class VoiceDetector {
     }
 
     // Check signal existence in binary list
+    /**
+     * Sprawdza istnienie sygnału w liście binarnej.
+     * @param signalBin Binarny sygnał wejściowy.
+     * @return True, jeżeli lista zawiera sygnał, false w przeciwnym wypadku.
+     */
     public boolean isZeros(List<Integer> signalBin){
         if(signalBin.indexOf(1) > 0){
             return false;
@@ -152,7 +177,11 @@ public class VoiceDetector {
         return true;
     }
 
-    // Detect signal and remove silence from it
+
+    /**
+     * Wykrywa sygnał i usuwa z niego ciszę.
+     * @return Sygnał z usuniętą ciszą.
+     */
     public List<Double> removeSilence(){
 
         //Primitive types
@@ -226,5 +255,4 @@ public class VoiceDetector {
         framesPSDBuffer = framesPSDBuffer.subList(points.first + 11, points.second + 11);
         return signal.subList(firstIndex, secondIndex);
     }
-
 }

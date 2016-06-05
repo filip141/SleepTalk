@@ -12,6 +12,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 
 /**
+ * Klasa służy do nagrywania odpowiedzi użytkownika oraz jej zapis do formatu .wav.
  * Created by filip on 30.05.16.
  */
 public class WavRecord {
@@ -29,6 +30,9 @@ public class WavRecord {
     private Thread recordingThread = null;
     private boolean isRecording = false;
 
+    /**
+     * Kontruktor klasy WavRecord
+     */
     public WavRecord(){
         bufferSize = AudioRecord.getMinBufferSize(8000,
                 AudioFormat.CHANNEL_CONFIGURATION_MONO,
@@ -36,6 +40,10 @@ public class WavRecord {
     }
 
     // Return Wav file patch
+    /**
+     * Metoda zwraca ścieżkę do pliku .wav.
+     * @return Ścieżka do pliku .wav.
+     */
     private String getFilename(){
         String filepath = Environment.getExternalStorageDirectory().getPath();
         File file = new File(filepath,AUDIO_RECORDER_FOLDER);
@@ -47,6 +55,10 @@ public class WavRecord {
     }
 
     // Return temp file patch
+    /**
+     * Metoda zwraca ścieżkę do tymczasowego pliku .wav.
+     * @return Ścieżka do tymczasowego pliku .wav.
+     */
     private String getTempFilename(){
         String filepath = Environment.getExternalStorageDirectory().getPath();
         File file = new File(filepath,AUDIO_RECORDER_FOLDER);
@@ -64,6 +76,9 @@ public class WavRecord {
     }
 
     // Start Recording
+    /**
+     * Metoda rozpoczyna nagrywanie pliku .wav.
+     */
     public void startRecording(){
         recorder = new AudioRecord(MediaRecorder.AudioSource.MIC,
                 RECORDER_SAMPLERATE, RECORDER_CHANNELS,RECORDER_AUDIO_ENCODING, bufferSize);
@@ -122,6 +137,10 @@ public class WavRecord {
     }
 
     // Stop recording
+    /**
+     * Zatrzymuje nagrywanie oraz zwraca ścieżkę do pliku .wav w którym zapisano dane z nagrania.
+     * @return Ścieżka do pliku .wav z nagraniem.
+     */
     public String stopRecording(){
         fileToSave = getFilename();
         if(null != recorder){
@@ -142,6 +161,9 @@ public class WavRecord {
     }
 
     // Delete temporary file
+    /**
+     * Usuwa tymczasowy plik .wav.
+     */
     private void deleteTempFile() {
         File file = new File(getTempFilename());
 
@@ -149,12 +171,20 @@ public class WavRecord {
     }
 
     // Delete temporary file
+    /**
+     * Usuwa plik .wav.
+     */
     public void deleteFile() {
         File file = new File(fileToSave);
 
         file.delete();
     }
 
+    /**
+     * Metoda kopiuje plik .wav.
+     * @param inFilename Ścieżka do pliku wyjściowego.
+     * @param outFilename Ścieżka do pliku wejściowego.
+     */
     private void copyWaveFile(String inFilename,String outFilename){
         FileInputStream in = null;
         FileOutputStream out = null;
@@ -189,6 +219,16 @@ public class WavRecord {
     }
 
     // Build Header
+    /**
+     * Tworzy nagłówek pliku .wav.
+     * @param out Strumień danych do których zapisywany jest nagłówek.
+     * @param totalAudioLen Całkowita długość audio.
+     * @param totalDataLen Całkowita długość danych.
+     * @param longSampleRate Częstotliwość próbkowania.
+     * @param channels Konfiguracja kanałów.
+     * @param byteRate Przepustowość bajtowa.
+     * @throws IOException
+     */
     private void WriteWaveFileHeader(
             FileOutputStream out, long totalAudioLen,
             long totalDataLen, long longSampleRate, int channels,

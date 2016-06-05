@@ -22,6 +22,11 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
 
+/**
+ * Główne okno aplikacji.
+ * Zawiera metody sterujące pracą programu oraz wyglądem graficznego interfejsu użytkownika.
+ * @author Mateusz
+ */
 public class MainActivity extends Activity {
 
     private Thread sleepTalkThread;
@@ -38,10 +43,14 @@ public class MainActivity extends Activity {
     private List<String> words;
     private List<MediaPlayer> recWords;
 
+    /**
+     * Metoda służąca do inicjalizowania aktywności.
+     * @param savedInstanceState Obiekt zawierający stan aktywności sprzed zamknięcia aktywności.
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-       setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_main);
 
         // Android objects initialization
         final Button recButton = (Button) findViewById(R.id.rec_button);
@@ -176,6 +185,10 @@ public class MainActivity extends Activity {
 
     }
 
+    /**
+     * Metoda służąca do włączania animacji przygaszania dla widoku TextMove.
+     * @param textMove Widok TextMove dla którego chcemy włączyć animację.
+     */
     private void startTextAnimation(TextMove textMove) {
         final Animation animation = new AlphaAnimation(1, 0); // Change alpha from fully visible to invisible
         animation.setDuration(2000); // duration - half a second
@@ -186,6 +199,10 @@ public class MainActivity extends Activity {
     }
 
 
+    /**
+     * Metoda służąca do włączania animacji przygaszania dla przycisku.
+     * @param button Przycisk dla którego chcemy włączyć animację.
+     */
     public void startButtonAnimation(Button button) {
         final Animation animation = new AlphaAnimation(1, 0); // Change alpha from fully visible to invisible
         animation.setDuration(2000); // duration - half a second
@@ -196,6 +213,11 @@ public class MainActivity extends Activity {
 
     }
 
+    /**
+     * Metoda oblicza współczynniki Mfcc sygnału w pliku .wav.
+     * @param file Plik .wav z sygnałem dla którego liczymy Mfcc.
+     * @return Współczynniki Mfcc sygnału.
+     */
     public List<List<Double>> mfccComputing(WavFile file)
     {
         List<Double> wavBuffer = file.read();
@@ -214,6 +236,12 @@ public class MainActivity extends Activity {
         return mfcc.compute();
     }
 
+    /**
+     * Metoda służy do znajdowania w bibliotece słowa odpowiadającego temu, którego współczynniki Mfcc podajemy jako parametr.
+     * @param lib Biblioteka słów w której szukamy odpowiednika.
+     * @param mfccCoefs Współczynniki Mfcc słowa, którego szukamy w bibliotece.
+     * @return String z nazwą słowa, które dopasowano.
+     */
     public String findWord(WordLibrary lib, List<List<Double>> mfccCoefs){
         double dynamicResult;
         double finalResult;
@@ -225,8 +253,9 @@ public class MainActivity extends Activity {
         for(String key: keys){
             mfccList = lib.get(key);
             for(List<List<Double>> mfccRel : mfccList){
-                dynamicResult = dynamicCompare.computeMatrix(mfccRel);
-                finalList.add(dynamicResult);
+                double[][] cumulMat = dynamicCompare.computeMatrix(mfccRel);
+                double result = dynamicCompare.getResult(cumulMat);
+                finalList.add(result);
                 keyList.add(key);
             }
         }
@@ -234,16 +263,26 @@ public class MainActivity extends Activity {
         return keyList.get(finalList.indexOf(finalResult));
     }
 
+    /**
+     * Metoda służy do budowania listy słów.
+     * @return Lista obiektów String zawierających nazwy słów.
+     */
     public List<String> buildWordList(){
         List<String> wordList = new ArrayList<>();
         wordList.add("butelka");
         wordList.add("metoda");
-        wordList.add("różnice");
-        wordList.add("człowiek");
+        wordList.add("rnice");
+        wordList.add("czÄąâ€šowiek");
         wordList.add("telefon");
         return wordList;
     }
 
+    /**
+     * Metoda służy do nagrania odpowiedzi na zagadkę oraz znalezienie odpowiadającego słowa w bazie.
+     * @param wv obiekt klasy WavRecord służący do nagrania odpowiedzi.
+     * @return Nazwa słowa, które dopasowano.
+     * @throws InterruptedException
+     */
     public String processWord(WavRecord wv) throws InterruptedException {
         Thread.sleep(10000);
         mDing.start();
@@ -257,7 +296,5 @@ public class MainActivity extends Activity {
         wv.deleteFile();
         return result;
     }
-
-
 
 }
