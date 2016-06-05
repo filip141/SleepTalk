@@ -21,9 +21,8 @@ import java.util.Iterator;
 import java.util.List;
 
 /**
- * Created by filip on 28.04.16.
- * PL: Klasa pomocnicza, służyła autorą do zapisywania danych
- * do pliku w celu późniejszego ich przetwarzania.
+ * Klasa pomocnicza, służyła autorom do zapisywania danych do pliku w celu późniejszego ich przetwarzania.
+ * Created by filip on 02.05.16.
  */
 public class FileSaver{
 
@@ -32,6 +31,10 @@ public class FileSaver{
     private static final String JSON_NAME = "/final.json";
     private BufferedWriter fileWriter;
 
+    /**
+     * Konstruktor klasy FileSaver.
+     * @param activity Kontekst aplikacji.
+     */
     public FileSaver(Context activity) {
         this.activity=activity;
         try {
@@ -41,7 +44,11 @@ public class FileSaver{
         }
     }
 
-    // Save data to file
+    /**
+     * Metoda służy do zapisywania danych do pliku w celu utworzenia wykresu dwuwymiarowego.
+     * @param points Lista współrzędnych punktów.
+     * @throws IOException
+     */
     public void save(List<Double> points) throws IOException {
 
         for(Double b: points){
@@ -51,7 +58,11 @@ public class FileSaver{
         fileWriter.close();
     }
 
-    // Save data to file
+    /**
+     * Metoda służy do zapisywania danych do pliku w celu utworzenia wykresu trójwymiarowego.
+     * @param array3D Lista współrzędnych punktów.
+     * @throws IOException
+     */
     public void save3D(List<List<Double>> array3D) throws IOException {
 
         for(List<Double> list: array3D){
@@ -65,6 +76,12 @@ public class FileSaver{
         fileWriter.close();
     }
 
+    /**
+     * Metoda konwertuje strumień danych do Stringa.
+     * @param is Strumień danych.
+     * @return String zawierający dane z strumienia danych.
+     * @throws Exception
+     */
     public static String convertStreamToString(InputStream is) throws Exception {
         BufferedReader reader = new BufferedReader(new InputStreamReader(is));
         StringBuilder sb = new StringBuilder();
@@ -76,6 +93,12 @@ public class FileSaver{
         return sb.toString();
     }
 
+    /**
+     * Metoda służy do wczytywania pliku do Stringa.
+     * @param fl Plik, który ma zostać wczytany.
+     * @return String w którym jest zawartość pliku.
+     * @throws Exception
+     */
     public static String getStringFromFile (File fl) throws Exception {
         FileInputStream fin = new FileInputStream(fl);
         String ret = convertStreamToString(fin);
@@ -84,7 +107,12 @@ public class FileSaver{
         return ret;
     }
 
-    //Read from json file
+    /**
+     * Służy do wczytywania obiektu JSON z pliku .json.
+     * @param fileName  Nazwa pliku .json z którego mają być wczytane dane.
+     * @return obiekt JSON z danymi z pliku .json.
+     * @throws Exception
+     */
     public JSONObject readFromJSON(String fileName) throws Exception {
         File sdcard = Environment.getExternalStorageDirectory();
         File file = new File(sdcard, fileName);
@@ -100,6 +128,10 @@ public class FileSaver{
         }
     }
 
+    /**
+     * Służy do wczytywania obiektu JSON z pliku .json znajdującego się w folderze Assets aplikacji.
+     * @return obiekt JSON z danymi z pliku .json znajdującego się w folderze Assets aplikacji.
+     */
     public JSONObject loadJSONFromAssets()
     {
         String json = null;
@@ -128,11 +160,17 @@ public class FileSaver{
     }
 
 
-    // Save data to JSON file
+    /**
+     * Metoda służy do zapisywania współczynników Mfcc do pliku .json.
+     * @param itemList Współczynniki Mfcc zapisywanego słowa.
+     * @param word  Nazwa zapisywanego słowa
+     * @param filename  Nazwa pliku do którego zapisujemy.
+     * @throws Exception
+     */
     public void saveToJSON(List<List<Double>> itemList, String word, String filename) throws Exception {
         JSONObject obj = readFromJSON(filename);
         if(obj == null){
-           obj = new JSONObject();
+            obj = new JSONObject();
         }
         obj.put(word + System.currentTimeMillis(), itemList.toString());
         File sdcard = Environment.getExternalStorageDirectory();
@@ -142,7 +180,12 @@ public class FileSaver{
         }
     }
 
-    // Get Java ArrayList from JSON object
+    /**
+     * Metoda służy do utworzenia listy z obiektu JSON.
+     * @param obj - obiekt JSON z którego tworzymy listę.
+     * @return Lista utworzona z podanego obiektu JSON.
+     * @throws Exception
+     */
     public WordLibrary getListFromJSON(JSONObject obj) throws Exception {
         List<String> mfccCoeffs;
         int coeffsNumber = 39;

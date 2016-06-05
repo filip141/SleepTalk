@@ -6,17 +6,21 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * Autorska implementacja transformaty Fouriera.
+ * Zastosowano w niej algorytm DFT, jak i algorytm Cooleya - Turkeya w celu poprawiania wydajności.
+ * Wydajność algorytmu można dostosować zminiając parametr fftMinimumPointsNumber.
  * Created by filip on 02.05.16.
- * PL: Autorska implementacja transformaty Fouriera,
- * zastosowano w niej algorytm DFT, jak i algorytm
- * Cooleya - Turkeya w celu poprawiania wydajności.
- * Wydajność algorytmu można dostosować zminiając parametr
- * fftMinimumPointsNumber
  */
 public class FourierTransform {
 
     private static int fftMinimumPointsNumber = 2;
 
+    /**
+     * Metoda oblicza dyskretną transformatę Fouriera sygnału.
+     * @param signal Sygnał dla którego obliczamy DFT.
+     * @param resolution Rozdzielczość transformaty.
+     * @return Dyskretne widmo sygnału.
+     */
     public List<ComplexNumber> dft(List<Double> signal, int resolution){
         double angle;
         double nthSample;
@@ -43,6 +47,11 @@ public class FourierTransform {
         return result;
     }
 
+    /**
+     * Oblicza szybką transformatę Fouriera.
+     * @param signal Sygnał dla którego obliczamy FFT.
+     * @return Widmo sygnału obliczone używając FFT.
+     */
     public List<ComplexNumber> fft(List<Double> signal){
 
         // Complex numbers
@@ -91,6 +100,11 @@ public class FourierTransform {
 
     }
 
+    /**
+     * Metoda zwraca najbliższą potęge liczby 2 dla podanej liczby.
+     * @param signalSize Liczba dla której szukamy następnej potęgi 2.
+     * @return Następna potęga liczby 2 większa od liczby podanej w parametrach.
+     */
     public static double nextPow(int signalSize){
         int counter = 0;
         double power;
@@ -103,6 +117,11 @@ public class FourierTransform {
         }
     }
 
+    /**
+     * Dodaje zera do sygnału, tak aby miał on długość równą potędze liczby 2.
+     * @param signal Sygnał do którego dodajemy zera.
+     * @return Sygnał z dodanymi zerami.
+     */
     public static List<Double> addZeros(List<Double> signal){
         int nxtPower = (int) nextPow(signal.size());
         int diff = nxtPower - signal.size();

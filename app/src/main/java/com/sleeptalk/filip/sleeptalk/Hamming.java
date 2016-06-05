@@ -5,20 +5,25 @@ import java.util.Iterator;
 import java.util.List;
 
 /**
+ * Implementacja okna Hamminga.
+ * Klasa zawiera implementacje interfejsu okna, reprezentuje ona okno Hamminga.
  * Created by filip on 03.05.16.
- * PL: Klasa zawiera implementacje interfejsu okna,
- * reprezentuje ona okno Hamminga.
- * Metoda build tworzy okno o określonym rozmiarze
- * Metoda multiplyWithSignal wymnaża sygnał z oknem
  */
 public class Hamming implements Window{
 
     private List<Double> windowCoeffs;
 
+    /**
+     * Konstruktor klasy Hamming.
+     */
     public Hamming(){
         windowCoeffs = new ArrayList<>();
     }
 
+    /**
+     * Metoda tworzy okno Hamminga.
+     * @param size Rozmiar okna.
+     */
     @Override
     public void build(int size) {
         double coeff;
@@ -28,6 +33,11 @@ public class Hamming implements Window{
         }
     }
 
+    /**
+     * Metoda służy do wymnażania sygnału przez okno Hamminga.
+     * @param signal Sygnał poddawany przemnażaniu.
+     * @return Sygnał po operacji okienkowania.
+     */
     @Override
     public List<Double> multiplyWithSignal(List<Double> signal) {
         List<Double> result = new ArrayList<>();
