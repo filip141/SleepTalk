@@ -1,14 +1,6 @@
 [
     {
-        "merged": "/home/filip/AndroidStudioProjects/SleepTalk/C:\\Users\\Mateusz\\Documents\\SleepTalk\\app\\build\\intermediates\\res\\merged\\debug\\color-v23\\abc_color_highlight_material.xml",
-        "source": "/home/filip/AndroidStudioProjects/SleepTalk/C:\\Users\\Mateusz\\Documents\\SleepTalk\\app\\build\\intermediates\\exploded-aar\\com.android.support\\appcompat-v7\\23.3.0\\res\\color-v23\\abc_color_highlight_material.xml"
-    },
-    {
         "merged": "/home/filip/AndroidStudioProjects/SleepTalk/app/build/intermediates/res/merged/debug/color-v23/abc_color_highlight_material.xml",
         "source": "/home/filip/AndroidStudioProjects/SleepTalk/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/color-v23/abc_color_highlight_material.xml"
-    },
-    {
-        "merged": "/home/filip/AndroidStudioProjects/SleepTalk/C:\\home\\filip\\AndroidStudioProjects\\SleepTalk\\app\\build\\intermediates\\res\\merged\\debug\\color-v23\\abc_color_highlight_material.xml",
-        "source": "/home/filip/AndroidStudioProjects/SleepTalk/C:\\home\\filip\\AndroidStudioProjects\\SleepTalk\\app\\build\\intermediates\\exploded-aar\\com.android.support\\appcompat-v7\\23.3.0\\res\\color-v23\\abc_color_highlight_material.xml"
     }
 ]

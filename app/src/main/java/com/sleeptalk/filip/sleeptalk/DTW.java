@@ -7,14 +7,25 @@ import java.util.Collections;
 import java.util.List;
 
 /**
+ * Klasa impementująca metodę DTW (Dynamic Time Warping).
  * Created by Mateusz on 2016-05-25.
  */
 public class DTW {
     private List<List<Double>> mfccCoeffs;
+
+    /**
+     * Konstruktor klasy DTW
+     * @param mfccCoeffs - Wektor współczynników Mfcc badanego słowa.
+     */
     public DTW(List<List<Double>> mfccCoeffs) {
         this.mfccCoeffs=mfccCoeffs;
     }
-    public double computeMatrix(List<List<Double>> mfccCoeffsTemp) //compute cumulated matrix
+    /**
+     * Metoda wylicza macierz odległości zakumulowanej.
+     * @param mfccCoeffsTemp - Wektor współczynników Mfcc słowa z bazy.
+     * @return Zakumulowana macierz odległości.
+     */
+    public double[][] computeMatrix(List<List<Double>> mfccCoeffsTemp) //compute cumulated matrix
     {
         int Ns = mfccCoeffs.size();
         int Nw = mfccCoeffsTemp.size();
@@ -79,6 +90,17 @@ public class DTW {
                 cumulatedMatrix[i][j]= Collections.min(temp);
             }
         }
+        return cumulatedMatrix;
+    }
+    /**
+     * Metoda wylicza zakumulowaną wartość "najkrótszej" ścieżki.
+     * @param cumulatedMatrix - Zakumulowana macierz odległości.
+     * @return Wartość zakumulowana "najkrótszej" ścieżki.
+     */
+    public double getResult(double[][] cumulatedMatrix)
+    {
+        int Ns= cumulatedMatrix.length;
+        int Nw = cumulatedMatrix[0].length;
         return cumulatedMatrix[Ns - 1][Nw - 1] / Math.sqrt(Ns*Ns + Nw*Nw);
     }
 }

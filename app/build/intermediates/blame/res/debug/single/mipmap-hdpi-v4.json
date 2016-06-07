@@ -1,14 +1,6 @@
 [
     {
-        "merged": "/home/filip/AndroidStudioProjects/SleepTalk/C:\\home\\filip\\AndroidStudioProjects\\SleepTalk\\app\\build\\intermediates\\res\\merged\\debug\\mipmap-hdpi-v4\\ic_launcher.png",
-        "source": "/home/filip/AndroidStudioProjects/SleepTalk/C:\\home\\filip\\AndroidStudioProjects\\SleepTalk\\app\\src\\main\\res\\mipmap-hdpi\\ic_launcher.png"
-    },
-    {
         "merged": "/home/filip/AndroidStudioProjects/SleepTalk/app/build/intermediates/res/merged/debug/mipmap-hdpi-v4/ic_launcher.png",
         "source": "/home/filip/AndroidStudioProjects/SleepTalk/app/src/main/res/mipmap-hdpi/ic_launcher.png"
-    },
-    {
-        "merged": "/home/filip/AndroidStudioProjects/SleepTalk/C:\\Users\\Mateusz\\Documents\\SleepTalk\\app\\build\\intermediates\\res\\merged\\debug\\mipmap-hdpi-v4\\ic_launcher.png",
-        "source": "/home/filip/AndroidStudioProjects/SleepTalk/C:\\Users\\Mateusz\\Documents\\SleepTalk\\app\\src\\main\\res\\mipmap-hdpi\\ic_launcher.png"
     }
 ]

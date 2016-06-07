@@ -1,6 +1,7 @@
 package com.sleeptalk.filip.sleeptalk;
 
 import android.app.Activity;
+import android.content.pm.ActivityInfo;
 import android.media.MediaPlayer;
 import android.os.Handler;
 import android.os.Bundle;
@@ -46,6 +47,7 @@ public class MainActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        setRequestedOrientation (ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
         // Android objects initialization
         final Button recButton = (Button) findViewById(R.id.rec_button);
@@ -89,10 +91,11 @@ public class MainActivity extends Activity {
             recButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    recButton.setEnabled(false);
+                    recButton.setClickable(false);
                     // SleepTalk turned on or off
                     if(turnedOn){
                         mWylacz.start();
+                        sleepTalkThread.interrupt();
                         turnedOn = false;
                     }
                     else{
@@ -173,7 +176,7 @@ public class MainActivity extends Activity {
                         });
                         sleepTalkThread.start();
                     }
-                    recButton.setEnabled(true);
+                    recButton.setClickable(true);
                 }
             });
         }
@@ -238,7 +241,6 @@ public class MainActivity extends Activity {
      * @return String z nazwą słowa, które dopasowano.
      */
     public String findWord(WordLibrary lib, List<List<Double>> mfccCoefs){
-        double dynamicResult;
         double finalResult;
         DTW dynamicCompare = new DTW(mfccCoefs);
         HashSet<String> keys = lib.keys();
@@ -265,9 +267,9 @@ public class MainActivity extends Activity {
     public List<String> buildWordList(){
         List<String> wordList = new ArrayList<>();
         wordList.add("butelka");
-        wordList.add("metoda");
-        wordList.add("rnice");
-        wordList.add("czÄąâ€šowiek");
+        wordList.add("metody");
+        wordList.add("różnice");
+        wordList.add("człowiek");
         wordList.add("telefon");
         return wordList;
     }
