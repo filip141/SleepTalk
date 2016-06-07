@@ -1,7 +1,6 @@
 package com.sleeptalk.filip.sleeptalk;
 
 import android.app.Activity;
-import android.content.res.AssetManager;
 import android.media.MediaPlayer;
 import android.os.Handler;
 import android.os.Bundle;
@@ -11,10 +10,6 @@ import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.LinearInterpolator;
 import android.widget.Button;
-
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
